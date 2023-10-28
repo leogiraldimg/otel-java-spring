@@ -24,17 +24,17 @@ public class AuthorService {
     private ModelMapper modelMapper;
 
     @Transactional
-    public AuthorDto insert(AuthorDto authorDto) {
-        Author entity = modelMapper.map(authorDto, Author.class);
+    public AuthorDto insert(AuthorDto dto) {
+        Author entity = modelMapper.map(dto, Author.class);
         entity = repository.save(entity);
         return modelMapper.map(entity, AuthorDto.class);
     }
 
     @Transactional
-    public AuthorDto update(Long id, AuthorDto authorDto) {
+    public AuthorDto update(Long id, AuthorDto dto) {
         repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Author with id %d not found".formatted(id)));
-        Author entity = modelMapper.map(authorDto, Author.class);
+        Author entity = modelMapper.map(dto, Author.class);
         try {
             repository.save(entity);
             return modelMapper.map(entity, AuthorDto.class);
@@ -43,12 +43,13 @@ public class AuthorService {
         }
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public Page<AuthorDto> findAllPaged(Pageable pageable) {
         Page<Author> page = repository.findAll(pageable);
         return page.map(author -> modelMapper.map(author, AuthorDto.class));
     }
 
+    @Transactional(readOnly = true)
     public AuthorDto findById(Long id) {
         Author entity = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Author with id %d not found".formatted(id)));
