@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.giraldidev.oteljavaspring.domains.author.Author;
@@ -13,6 +14,7 @@ import br.com.giraldidev.oteljavaspring.repositories.AuthorRepository;
 import br.com.giraldidev.oteljavaspring.services.exception.DatabaseException;
 import br.com.giraldidev.oteljavaspring.services.exception.ResourceNotFoundException;
 
+@Service
 public class AuthorService {
 
     @Autowired
