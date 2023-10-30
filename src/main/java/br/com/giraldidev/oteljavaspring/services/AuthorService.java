@@ -13,8 +13,10 @@ import br.com.giraldidev.oteljavaspring.domains.author.AuthorDto;
 import br.com.giraldidev.oteljavaspring.repositories.AuthorRepository;
 import br.com.giraldidev.oteljavaspring.services.exception.DatabaseException;
 import br.com.giraldidev.oteljavaspring.services.exception.ResourceNotFoundException;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
+@Slf4j
 public class AuthorService {
 
     @Autowired
@@ -27,6 +29,9 @@ public class AuthorService {
     public AuthorDto insert(AuthorDto dto) {
         Author entity = modelMapper.map(dto, Author.class);
         entity = repository.save(entity);
+
+        log.info("Author with id %d created".formatted(entity.getId()));
+
         return modelMapper.map(entity, AuthorDto.class);
     }
 
@@ -37,6 +42,9 @@ public class AuthorService {
         Author entity = modelMapper.map(dto, Author.class);
         try {
             repository.save(entity);
+
+            log.info("Author with id %d updated".formatted(id));
+
             return modelMapper.map(entity, AuthorDto.class);
         } catch (DataIntegrityViolationException e) {
             throw new DatabaseException("Integrity violation");
@@ -60,5 +68,7 @@ public class AuthorService {
         repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Author with id %d not found".formatted(id)));
         repository.deleteById(id);
+
+        log.info("Author with id %d deleted".formatted(id));
     }
 }

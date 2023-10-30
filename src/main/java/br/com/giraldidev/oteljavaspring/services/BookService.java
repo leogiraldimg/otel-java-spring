@@ -15,8 +15,10 @@ import br.com.giraldidev.oteljavaspring.repositories.AuthorRepository;
 import br.com.giraldidev.oteljavaspring.repositories.BookRepository;
 import br.com.giraldidev.oteljavaspring.services.exception.DatabaseException;
 import br.com.giraldidev.oteljavaspring.services.exception.ResourceNotFoundException;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
+@Slf4j
 public class BookService {
 
     @Autowired
@@ -30,6 +32,9 @@ public class BookService {
         Book entity = new Book();
         copyDtoToEntity(dto, entity);
         entity = repository.save(entity);
+
+        log.info("Book with id %d created".formatted(entity.getId()));
+
         return new BookDto(entity, entity.getAuthors());
     }
 
@@ -40,6 +45,9 @@ public class BookService {
         copyDtoToEntity(dto, entity);
         try {
             entity = repository.save(entity);
+
+            log.info("Book with id %d updated".formatted(id));
+
             return new BookDto(entity, entity.getAuthors());
         } catch (DataIntegrityViolationException e) {
             throw new DatabaseException("Integrity violation");
@@ -63,6 +71,8 @@ public class BookService {
         repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Book with id %d not found".formatted(id)));
         repository.deleteById(id);
+
+        log.info("Book with id %d deleted".formatted(id));
     }
 
     private void copyDtoToEntity(BookDto dto, Book entity) {
