@@ -37,9 +37,10 @@ public class AuthorService {
 
     @Transactional
     public AuthorDto update(Long id, AuthorDto dto) {
-        repository.findById(id)
+        Author entity = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Author with id %d not found".formatted(id)));
-        Author entity = modelMapper.map(dto, Author.class);
+        entity.setName(dto.getName());
+
         try {
             repository.save(entity);
 
